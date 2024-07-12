@@ -18,7 +18,13 @@ import {
 } from "lucide-react";
 
 // Common Components
-const IconWrapper = ({ icon: Icon, size = "sm" }) => (
+const IconWrapper = ({
+    icon: Icon,
+    size = "sm",
+}: {
+    icon: React.ElementType;
+    size?: string;
+}) => (
     <div
         className={`bg-[#4b4b4b] rounded-full ${
             size === "sm" ? "w-7 h-7 sm:w-8 sm:h-8" : "w-8 h-8 sm:w-10 sm:h-10"
@@ -34,7 +40,19 @@ const IconWrapper = ({ icon: Icon, size = "sm" }) => (
     </div>
 );
 
-const InfoCard = ({ icon, title, subtitle, onClick, children }) => (
+const InfoCard = ({
+    icon,
+    title,
+    subtitle,
+    onClick,
+    children,
+}: {
+    icon: React.ElementType;
+    title: string;
+    subtitle: string;
+    onClick?: () => void;
+    children?: React.ReactNode;
+}) => (
     <div
         className="flex items-center justify-between bg-[#3d3d3d] rounded-md p-2 cursor-pointer hover:bg-[#4b4b4b]"
         onClick={onClick}
@@ -184,6 +202,9 @@ const CharacterAbilities = () => (
                 icon={SwordIcon}
                 title="Slash"
                 subtitle="Deal 150 damage"
+                onClick={function (): void {
+                    throw new Error("Function not implemented.");
+                }}
             />
             <InfoCard
                 icon={ShieldIcon}
@@ -229,7 +250,15 @@ const ArenaList = () => (
     </div>
 );
 
-const ArenaCard = ({ icon, title, description }) => (
+const ArenaCard = ({
+    icon,
+    title,
+    description,
+}: {
+    icon: React.ElementType;
+    title: string;
+    description: string;
+}) => (
     <div className="bg-[#3d3d3d] rounded-md p-3 sm:p-4 cursor-pointer hover:bg-[#4b4b4b]">
         <IconWrapper icon={icon} size="lg" />
         <div className="font-medium mb-1 text-sm sm:text-base mt-2">
