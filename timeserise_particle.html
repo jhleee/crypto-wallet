@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파티클 흐름 시각화</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="particleCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let n = 0;
+        let time = 0;
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+                this.x = 0;
+            }
+
+            reset() {
+                const spawnHeight = height * n;
+                this.y = height - spawnHeight + Math.random() * spawnHeight;
+                this.speed = 1 + Math.random() * 3;
+                this.radius = 1 + Math.random() * 2 + n * 3; // n에 따라 크기 변화
+            }
+
+            update() {
+                this.x += this.speed;
+                if (this.x > width) {
+                    this.x = 0;
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function updateN() {
+            time += 0.02;
+            n = Math.sin(time) - Math.cos(time * 0.5);
+            n = (n + 2) / 4; // 0과 1 사이의 값으로 정규화
+        }
+
+        function getColor(n) {
+            const r = Math.floor(255 * n);
+            const b = Math.floor(255 * (1 - n));
+            return `rgb(${r}, 0, ${b})`;
+        }
+
+        function updateParticles() {
+            const targetCount = Math.floor(500 + 1000 * n);
+            while (particles.length < targetCount) {
+                particles.push(new Particle());
+            }
+            while (particles.length > targetCount) {
+                particles.pop();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            updateN();
+            updateParticles();
+            
+            ctx.fillStyle = getColor(n);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animate();
+    </script>
+</body>
+</html>
